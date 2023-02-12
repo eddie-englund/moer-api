@@ -1,0 +1,34 @@
+import { initFastify } from './init-fastify';
+import { initMongo } from './db/index';
+import 'reflect-metadata';
+import dotenv from 'dotenv';
+import { isLeft } from 'fp-ts/Either';
+
+dotenv.config();
+
+async function start() {
+  console.info('Starting application...');
+  const db = await initMongo({
+    uri: process.env.MONGO_URI,
+    dbName: process.env.MONGO_DB_NAME,
+  })();
+
+  if (isLeft(db)) {
+    console.error('Failed to connect to db, exiting application...', db.left);
+    process.exit(1);
+  }
+
+  console.info(
+    `MongoDB connection to db '${process.env.MONGO_DB_NAME}' was successful`,
+  );
+
+  const fastify = initFastify(db.right);
+  if (isLeft(fastify)) {
+    console.error('Failed to init fastify, exiting application...', fastify.left);
+  }
+  console.info(
+    `Fastify was successfuly initalized on port ${process.env.FASTIFY_PORT}`,
+  );
+}
+
+start();
