@@ -1,3 +1,4 @@
+import { createLogger } from './util/create-logger';
 import { initFastify } from './init-fastify';
 import { initMongo } from './db/index';
 import 'reflect-metadata';
@@ -7,7 +8,8 @@ import { isLeft } from 'fp-ts/Either';
 dotenv.config();
 
 async function start() {
-  console.info('Starting application...');
+  const logger = createLogger();
+  logger.info('Starting application...');
   const db = await initMongo({
     uri: process.env.MONGO_URI,
     dbName: process.env.MONGO_DB_NAME,
@@ -18,15 +20,15 @@ async function start() {
     process.exit(1);
   }
 
-  console.info(
+  logger.info(
     `MongoDB connection to db '${process.env.MONGO_DB_NAME}' was successful`,
   );
 
-  const fastify = initFastify(db.right);
+  const fastify = initFastify(db.right, logger);
   if (isLeft(fastify)) {
-    console.error('Failed to init fastify, exiting application...', fastify.left);
+    logger.error('Failed to init fastify, exiting application...', fastify.left);
   }
-  console.info(
+  logger.info(
     `Fastify was successfuly initalized on port ${process.env.FASTIFY_PORT}`,
   );
 }

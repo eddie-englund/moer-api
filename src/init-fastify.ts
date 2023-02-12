@@ -1,3 +1,4 @@
+import { Logger } from 'winston';
 import { registerRoutes } from './routes/router';
 import { Either } from 'fp-ts/lib/Either';
 import fastify, { FastifyInstance } from 'fastify';
@@ -8,12 +9,12 @@ import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/function';
 import { ZodError } from 'zod';
 
-export const initFastify = (db: Collections): Either<Error, FastifyInstance> => {
+export const initFastify = (db: Collections, logger: Logger): Either<Error, FastifyInstance> => {
   const app = fastify();
 
   app.register(helmet);
 
-  // zod
+  // zod type provider
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
@@ -29,10 +30,13 @@ export const initFastify = (db: Collections): Either<Error, FastifyInstance> => 
         success: false,
       });
     }
+
+    logger.error('Unhandeled error', err);
+    return reply.status(500).send({ msg: 'internal server error', success: false });
   });
 
   // register routes
-  registerRoutes(app, db);
+  registerRoutes(app, db, logger);
 
   return pipe(
     E.tryCatch(

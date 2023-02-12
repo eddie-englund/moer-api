@@ -25,7 +25,7 @@ export const registerEmail = (app: FastifyInstance, options: FastifyPluginOption
         ),
         TE.map(() => res.status(200).send({ success: true })),
         TE.mapLeft((err) => {
-          console.error(
+          options.logger.error(
             `Something went wrong inserting email into subscriptions got error: ${err}`,
           );
           return res
