@@ -1,5 +1,7 @@
 version: '3.9'
 networks:
+  traefik_proxy:
+    external: true
   moer-databases:
     external: true
 services:
@@ -17,6 +19,7 @@ services:
       - 8080:8080
     networks:
       - moer-databases
+      - traefik_proxy
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_proxy"
