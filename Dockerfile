@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile --production=false
 # Build application
 COPY tsconfig.json ./
 COPY src ./src
-RUN yarn run:build
+RUN yarn build
 
 
 FROM node:18 as runner
