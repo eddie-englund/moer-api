@@ -20,7 +20,7 @@ async function start() {
     process.exit(1);
   }
 
-  logger.info('Env variables set as expected...')
+  logger.info('Env variables set as expected...');
 
   const db = await initMongo({
     uri: process.env.MONGO_URI,

@@ -10,11 +10,14 @@ import { pipe } from 'fp-ts/lib/function';
 import { ZodError } from 'zod';
 import cors from '@fastify/cors';
 
-export const initFastify = (db: Collections, logger: Logger): Either<Error, FastifyInstance> => {
+export const initFastify = (
+  db: Collections,
+  logger: Logger,
+): Either<Error, FastifyInstance> => {
   const app = fastify();
 
   app.register(helmet);
-  app.register(cors, { origin: process.env.FASTIFY_CORS_ORIGINS })
+  app.register(cors, { origin: process.env.FASTIFY_CORS_ORIGINS });
 
   // zod type provider
   app.setValidatorCompiler(validatorCompiler);
