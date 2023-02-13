@@ -1,0 +1,21 @@
+version: '3.9'
+networks:
+  moer-databases:
+    external: true
+services:
+  moer-backend:
+    env_file:
+      - './.env'
+    container_name: 'moer-backend'
+    volumes:
+      - moer-backend_data:/app/store
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - 8080:8080
+    networks:
+      - moer-databases
+volumes:
+  moer-backend_data:
