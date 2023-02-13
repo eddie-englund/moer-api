@@ -17,5 +17,11 @@ services:
       - 8080:8080
     networks:
       - moer-databases
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.moer.rule=Host(`api.moer.mingodesk.com`)"
+      - "traefik.http.routers.moer.tls=true"
+      - "traefik.http.routers.moer.tls.certResolver=letsencrypt"
 volumes:
   moer-backend_data:
