@@ -25,7 +25,7 @@ RUN yarn install --frozen-lockfile --production=true
 
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 8080
+EXPOSE 3000
 VOLUME ["/app/store"]
 
 # Run application
