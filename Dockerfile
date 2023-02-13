@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile --production=false
 # Build application
 COPY tsconfig.json ./
 COPY src ./src
-RUN yarn build
+RUN yarn run:build
 
 
 FROM node:18 as runner
@@ -30,4 +30,4 @@ VOLUME ["/app/store"]
 
 # Run application
 
-CMD ["yarn", "deploy"]
+CMD ["yarn", "run:deploy"]
